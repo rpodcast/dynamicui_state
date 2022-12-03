@@ -1,7 +1,3 @@
-# R Projects Development Template
+# Dynamic UI State in Shiny
 
-This repo provides a starting template for a containerized development environment for my R projects in data science and Shiny application development, tailored to both the RStudio IDE as well as Visual Studio Code. For a more detailed description, please see the [`.devcontainer/README.md`](.devcontainer/README.md)),
-
-🎥 Check out this previous [Shiny Developer Series livestream](https://youtu.be/4wRiPG9LM3o) for a hands-on walkthrough of this setup!
-
-
+This repository contains an example Shiny application with dynamic UI generation, inspired by real-world situations. The goal is to provide a user-friendly abstraction to the necessary logic to preserve the server-side results of the UI, while letting the user selectively remove pieces without interfering with the application state.
