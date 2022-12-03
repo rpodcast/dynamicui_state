@@ -1,0 +1,11 @@
+name: dynamicui
+title:
+username:
+account: rpodcast
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7803100
+bundleId: 6586283
+url: https://rpodcast.shinyapps.io/dynamicui/
+when: 1670077005.95898
+lastSyncTime: 1670077005.959

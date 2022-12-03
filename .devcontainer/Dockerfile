@@ -11,6 +11,6 @@ RUN apt-get update -qq \
   && apt-get -y install ./tmp/chrome.deb
 
 # install additional R packages
-RUN install2.r shiny shinytest2 languageserver httpgd
+RUN install2.r shiny shinytest2 languageserver httpgd rsconnect
 
 USER rstudio
