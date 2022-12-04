@@ -35,59 +35,41 @@ server <- function(input, output, session) {
 
   # add dynamic UI set
   observeEvent(input$add_inputs, {
-    new_id <- stringi::stri_rand_strings(1, 6)
-    param_settings$sets_ids <- c(
-      param_settings$sets_ids, 
-      new_id
-    )
-
-    insertUI(
-      selector = paste0('#', "add_inputs_here"),
-      ui = tagList(
-        div(
-          id = new_id,
-          dyn_UI(new_id)
-        )
-      )
+    new_ids <- stateInsertUI(
+      dyn_UI,
+      dyn_Server,
+      session,
+      selector = paste0('#', "add_inputs_here")
     )
 
     # update removal selection dropdown
     updateSelectInput(
       session,
       "set_to_remove",
-      choices = param_settings$sets_ids
+      choices = new_ids
     )
-
-    # execute server-side portion of param module
-    param_settings$results[[new_id]] <- dyn_Server(new_id)
   })
 
   # remove selected dynamic UI container
   observeEvent(input$remove_inputs, {
     req(input$set_to_remove)
-    remove_id <- input$set_to_remove
-
-    removeUI(
-      selector = paste0("#", remove_id)
-    )
-
-    # update reactive values
-    param_settings$results[[remove_id]] <- NULL
-    param_settings$sets_ids <- base::setdiff(param_settings$sets_ids, remove_id)
+    removeId <- input$set_to_remove
+    new_ids <- stateRemoveUI(removeId, session)
 
     # update removal selection dropdown
     updateSelectInput(
       session,
       "set_to_remove",
-      choices = param_settings$sets_ids
+      choices = new_ids
     )
-
   })
 
+  # output is not refreshing, likely due to using session$userData
   output$values <- renderPrint({
-    req(param_settings$sets_ids)
-    purrr::walk(seq_along(param_settings$sets_ids), ~{
-      print(param_settings$results[[.x]]())
+    new_ids <- session$userData$sets_ids
+    results <- session$userData$results
+    purrr::walk(seq_along(new_ids), ~{
+      print(results[[.x]]())
     })
   })
 }
