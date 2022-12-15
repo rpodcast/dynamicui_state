@@ -1,4 +1,5 @@
 library(shiny)
+library(R6)
 
 ui <- fluidPage(
   h2("Dynamic UI Generation"),
@@ -27,50 +28,29 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  # define reactive values for key settings
-  param_settings <- reactiveValues(
-    sets_ids = c(),
-    results = list()
+  x <- DynamicClass$new(
+    module_ui = dyn_UI,
+    module_server = dyn_Server,
+    selector = paste0('#', "add_inputs_here"),
+    removal_input_id = "set_to_remove",
+    session = session
   )
 
   # add dynamic UI set
   observeEvent(input$add_inputs, {
-    new_ids <- stateInsertUI(
-      dyn_UI,
-      dyn_Server,
-      session,
-      selector = paste0('#', "add_inputs_here")
-    )
-
-    # update removal selection dropdown
-    updateSelectInput(
-      session,
-      "set_to_remove",
-      choices = new_ids
-    )
+    x$insert()
   })
 
   # remove selected dynamic UI container
   observeEvent(input$remove_inputs, {
     req(input$set_to_remove)
     removeId <- input$set_to_remove
-    new_ids <- stateRemoveUI(removeId, session)
-
-    # update removal selection dropdown
-    updateSelectInput(
-      session,
-      "set_to_remove",
-      choices = new_ids
-    )
+    x$remove(removeId)
   })
 
   # output is not refreshing, likely due to using session$userData
   output$values <- renderPrint({
-    new_ids <- session$userData$sets_ids
-    results <- session$userData$results
-    purrr::walk(seq_along(new_ids), ~{
-      print(results[[.x]]())
-    })
+    x$results()
   })
 }
 
