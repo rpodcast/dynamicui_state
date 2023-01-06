@@ -8,6 +8,7 @@ DynamicClass <- R6::R6Class(
     session = NULL,
     ids = NULL,
     current_id = NULL,
+    results = NULL,
     param_settings = NULL
   ),
   public = list(
@@ -16,6 +17,7 @@ DynamicClass <- R6::R6Class(
       module_server = NULL,
       selector = NULL,
       removal_input_id = NULL,
+      results = NULL,
       session = shiny::getDefaultReactiveDomain()
     ) {
 
@@ -31,6 +33,7 @@ DynamicClass <- R6::R6Class(
       private$param_settings <- shiny::reactiveValues(
         results = list()
       )
+      private$results <- shiny::reactiveValues()
     },
     insert = function() {
       private$current_id <- stringi::stri_rand_strings(1, 6)
@@ -67,7 +70,7 @@ DynamicClass <- R6::R6Class(
       return(private$ids)
     },
 
-    results = function() {
+    list_results = function(id = NULL) {
       print(private$param_settings$results)
       invisible(self)
     }
