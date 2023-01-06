@@ -53,7 +53,8 @@ DynamicClass <- R6::R6Class(
 
       res <- private$module_server(private$current_id)
 
-      private$param_settings$results[[private$current_id]] <- res
+      #private$param_settings$results[[private$current_id]] <- res
+      private$results[[private$current_id]] <- res
       private$ids <- c(private$ids, private$current_id)
 
       return(private$ids)
@@ -66,12 +67,14 @@ DynamicClass <- R6::R6Class(
       )
 
       private$ids <- base::setdiff(private$ids, removeId)
-      private$param_settings$results[[removeId]] <- NULL
+      #private$param_settings$results[[removeId]] <- NULL
+      private$results[[removeId]] <- NULL
       return(private$ids)
     },
 
     list_results = function(id = NULL) {
-      print(private$param_settings$results)
+      #print(private$param_settings$results)
+      print(private$results)
       invisible(self)
     }
   )
