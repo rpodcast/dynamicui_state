@@ -53,13 +53,7 @@ DynamicClass <- R6::R6Class(
       private$param_settings$results[[private$current_id]] <- res
       private$set_ids <- c(private$set_ids, private$current_id)
 
-      shiny::updateSelectInput(
-        private$session,
-        private$removal_input_id,
-        choices = private$set_ids
-      )
-
-      invisible(self)
+      return(private$set_ids)
     },
 
     remove = function(removeId) {
@@ -70,7 +64,7 @@ DynamicClass <- R6::R6Class(
 
       private$set_ids <- base::setdiff(private$set_ids, removeId)
       private$param_settings$results[[removeId]] <- NULL
-      invisible(self)
+      return(private$set_ids)
     },
 
     results = function() {

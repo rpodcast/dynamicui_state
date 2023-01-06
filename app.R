@@ -38,14 +38,28 @@ server <- function(input, output, session) {
 
   # add dynamic UI set
   observeEvent(input$add_inputs, {
-    x$insert()
+    ids <- x$insert()
+
+    # update selectInput
+    updateSelectInput(
+      session,
+      "set_to_remove",
+      choices = ids
+    )
   })
 
   # remove selected dynamic UI container
   observeEvent(input$remove_inputs, {
     req(input$set_to_remove)
     removeId <- input$set_to_remove
-    x$remove(removeId)
+    ids <- x$remove(removeId)
+
+    # update selectInput
+    updateSelectInput(
+      session,
+      "set_to_remove",
+      choices = ids
+    )
   })
 
   # output is not refreshing, likely due to using session$userData
