@@ -6,7 +6,7 @@ DynamicClass <- R6::R6Class(
     selector = NULL,
     removal_input_id = NULL,
     session = NULL,
-    set_ids = NULL,
+    ids = NULL,
     current_id = NULL,
     param_settings = NULL
   ),
@@ -51,9 +51,9 @@ DynamicClass <- R6::R6Class(
       res <- private$module_server(private$current_id)
 
       private$param_settings$results[[private$current_id]] <- res
-      private$set_ids <- c(private$set_ids, private$current_id)
+      private$ids <- c(private$ids, private$current_id)
 
-      return(private$set_ids)
+      return(private$ids)
     },
 
     remove = function(removeId) {
@@ -62,9 +62,9 @@ DynamicClass <- R6::R6Class(
         session = private$session
       )
 
-      private$set_ids <- base::setdiff(private$set_ids, removeId)
+      private$ids <- base::setdiff(private$ids, removeId)
       private$param_settings$results[[removeId]] <- NULL
-      return(private$set_ids)
+      return(private$ids)
     },
 
     results = function() {
