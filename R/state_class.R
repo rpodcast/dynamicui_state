@@ -73,9 +73,7 @@ DynamicClass <- R6::R6Class(
     },
 
     list_results = function(id = NULL) {
-      #print(private$param_settings$results)
-      print(private$results)
-      invisible(self)
+      purrr::walk(names(private$results), ~print(private$results[[.x]]()))
     }
   )
 )
