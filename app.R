@@ -12,6 +12,7 @@ ui <- fluidPage(
     ),
     column(
       width = 6,
+      uiOutput("last_id"),
       verbatimTextOutput("values")
     )
   ),
@@ -28,6 +29,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+
+  last_id <- reactiveVal(NULL)
+
   x <- DynamicClass$new(
     module_ui = dyn_UI,
     module_server = dyn_Server,
@@ -39,7 +43,7 @@ server <- function(input, output, session) {
   # add dynamic UI set
   observeEvent(input$add_inputs, {
     ids <- x$insert()
-
+    last_id(tail(ids, n = 1))
     # update selectInput
     updateSelectInput(
       session,
@@ -53,7 +57,7 @@ server <- function(input, output, session) {
     req(input$set_to_remove)
     removeId <- input$set_to_remove
     ids <- x$remove(removeId)
-
+    last_id(tail(ids, n = 1))
     # update selectInput
     updateSelectInput(
       session,
@@ -62,7 +66,11 @@ server <- function(input, output, session) {
     )
   })
 
-  # output is not refreshing, likely due to using session$userData
+  output$last_id <- renderUI({
+    req(last_id())
+    p(glue::glue("The last ID entered is {last_id()}"))
+  })
+
   output$values <- renderPrint({
     x$list_results()
   })
