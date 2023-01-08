@@ -8,8 +8,7 @@ DynamicClass <- R6::R6Class(
     session = NULL,
     ids = NULL,
     current_id = NULL,
-    results = NULL,
-    param_settings = NULL
+    results = NULL
   ),
   public = list(
     initialize = function(
@@ -30,9 +29,6 @@ DynamicClass <- R6::R6Class(
       private$module_server <- module_server
       private$selector <- selector
       private$removal_input_id <- removal_input_id
-      private$param_settings <- shiny::reactiveValues(
-        results = list()
-      )
       private$results <- shiny::reactiveValues()
     },
     insert = function() {
