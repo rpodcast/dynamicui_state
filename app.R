@@ -64,7 +64,9 @@ server <- function(input, output, session) {
 
   # output is not refreshing, likely due to using session$userData
   output$values <- renderPrint({
-    x$list_results()
+    lapply(x$results_obj(), function(obj) {
+      print(obj())
+    })
   })
 }
 
