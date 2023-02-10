@@ -72,7 +72,9 @@ server <- function(input, output, session) {
   })
 
   output$values <- renderPrint({
-    x$list_results()
+    lapply(x$results_obj(), function(obj) {
+      print(obj())
+    })
   })
 }
 

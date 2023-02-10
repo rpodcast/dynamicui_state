@@ -66,7 +66,22 @@ DynamicClass <- R6::R6Class(
     },
 
     list_results = function(id = NULL) {
+      
       purrr::walk(names(private$results), ~print(private$results[[.x]]()))
+    },
+
+    results_obj = function(id = TRUE) {
+      selected_ids <- if (isTRUE(id)) {
+        names(private$results)
+        private$ids
+      } else {
+        # TODO: Error if any id is not present?
+        selected_ids <- id
+      }
+      result <- lapply(selected_ids, function(selected_id) {
+        private$results[[selected_id]]
+      })
+      setNames(result, selected_ids)
     }
   )
 )
