@@ -8,14 +8,17 @@ DynamicClass <- R6::R6Class(
     session = NULL,
     ids = NULL,
     current_id = NULL,
-    results = NULL
+    results = NULL,
+    tabset = FALSE
   ),
   public = list(
+    counter = 0,
     initialize = function(
       module_ui = NULL,
       module_server = NULL,
       selector = NULL,
       removal_input_id = NULL,
+      tabset = FALSE,
       results = NULL,
       session = shiny::getDefaultReactiveDomain()
     ) {
@@ -30,23 +33,47 @@ DynamicClass <- R6::R6Class(
       private$selector <- selector
       private$removal_input_id <- removal_input_id
       private$results <- shiny::reactiveValues()
+      private$tabset <- tabset
     },
-    insert = function() {
+
+    # new_id = function() {
+    #   self$counter <- self$counter + 1
+    #   return(self$counter)
+    # },
+
+    # remove_id = function() {
+    #   self$counter <- self$counter - 1
+    #   return(self$counter)
+    # },
+
+    insert = function(display_id = FALSE) {
       private$current_id <- stringi::stri_rand_strings(1, 6)
-      
+      #private$current_id <- self$new_id()
+
       ui <- htmltools::tagList(
         htmltools::div(
           id = private$current_id,
+          if (display_id) h4(paste("container", private$current_id)),
           private$module_ui(private$current_id)
         )
       )
 
-      shiny::insertUI(
+      if (private$tabset) {
+        shiny::appendTab(
+          inputId = private$selector,
+          shiny::tabPanel(
+            title = private$current_id,
+            ui
+          )
+        )
+      } else {
+        shiny::insertUI(
         ui = ui,
         selector = private$selector,
         session = private$session
       )
-
+      }
+      
       res <- private$module_server(private$current_id)
       private$results[[private$current_id]] <- res
       private$ids <- c(private$ids, private$current_id)

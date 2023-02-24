@@ -2,7 +2,6 @@ dyn_UI <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
-      h4(paste("container", id)),
       column(
         width = 4,
         selectInput(
