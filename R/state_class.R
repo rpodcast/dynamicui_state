@@ -51,7 +51,7 @@ DynamicClass <- R6::R6Class(
       private$results[[private$current_id]] <- res
       private$ids <- c(private$ids, private$current_id)
 
-      return(private$ids)
+      return(private$current_id)
     },
 
     remove = function(removeId) {
@@ -68,6 +68,10 @@ DynamicClass <- R6::R6Class(
     list_results = function(id = NULL) {
       
       purrr::walk(names(private$results), ~print(private$results[[.x]]()))
+    },
+
+    all_ids = function() {
+      return(private$ids)
     },
 
     results_obj = function(id = TRUE) {

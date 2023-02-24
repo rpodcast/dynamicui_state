@@ -12,7 +12,6 @@ ui <- fluidPage(
     ),
     column(
       width = 6,
-      uiOutput("last_id"),
       verbatimTextOutput("values")
     )
   ),
@@ -42,13 +41,14 @@ server <- function(input, output, session) {
 
   # add dynamic UI set
   observeEvent(input$add_inputs, {
-    ids <- x$insert()
-    last_id(tail(ids, n = 1))
+    id <- x$insert()
+    #last_id(tail(ids, n = 1))
+    last_id(id)
     # update selectInput
     updateSelectInput(
       session,
       "set_to_remove",
-      choices = ids
+      choices = x$all_ids()
     )
   })
 
@@ -64,11 +64,6 @@ server <- function(input, output, session) {
       "set_to_remove",
       choices = ids
     )
-  })
-
-  output$last_id <- renderUI({
-    req(last_id())
-    p(glue::glue("The last ID entered is {last_id()}"))
   })
 
   output$values <- renderPrint({
